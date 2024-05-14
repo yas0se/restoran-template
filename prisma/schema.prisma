@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  category_id    Int      @id @default(autoincrement())
+  category_name  String   @unique
+  category_img   String   @unique
+  meals          meal[]   
+}
+
+model restaurant {
+  restaurant_id  Int      @id @default(autoincrement())
+  restaurant_name String   @unique
+  restaurant_address String   @unique
+  restaurant_phone String   @unique
+  restaurant_email String   @unique
+  restaurant_city String
+  employees employees[]
+}
+
+model employees{
+  employee_id  Int      @id @default(autoincrement())
+  employee_name String   @unique
+  employee_img String
+  restorntID Int
+  restaurant restaurant @relation(fields: [restorntID], references: [restaurant_id]) 
+
+}
+
+model newsletter {
+  newsletter_id  Int      @id @default(autoincrement())
+  newsletter_email String   @unique
+}
+
+model meal {
+  meal_id          Int      @id @default(autoincrement())
+  meal_name        String   @unique
+  meal_description String   @unique
+  meal_price       Float
+  meal_img         String   @unique
+  catigoryID       Int
+  catigory         category  @relation(fields: [catigoryID], references: [category_id]) 
+}
