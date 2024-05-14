@@ -50,6 +50,6 @@ model meal {
   meal_description String   @unique
   meal_price       Float
   meal_img         String   @unique
-  catigoryID       Int
-  catigory         category  @relation(fields: [catigoryID], references: [category_id]) 
+  categoryID       Int
+  category         category  @relation(fields: [categoryID], references: [category_id]) 
 }
