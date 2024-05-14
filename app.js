@@ -23,11 +23,30 @@ app.use((req, res, next) => {
     next();
 });
 
+// Middleware pour rendre les fichiers statiques dans le répertoire "public"
+app.use(express.static('public'));
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+
 //ejs
 app.set("view engine","ejs");
 
 //route prefix
 app.use("", require("./routes/routes"));
+app.get('/uploads/:filename', (req, res) => {
+    const fileName = req.params.filename;
+    const filePath = path.join(__dirname, 'uploads', fileName); // Assuming uploads directory is in the root of your project
+
+    // Send the file
+    res.sendFile(filePath, (err) => {
+        if (err) {
+            console.error('Error sending file:', err);
+            res.status(404).send('File not found');
+        } 
+    });
+});
 
 app.listen(PORT, () => {
     console.log(` server started at http://localhost:${PORT}`);

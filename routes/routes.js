@@ -10,9 +10,9 @@ router.get("/add_employees", (req, res) => {
 router.get("/add_meal", (req, res) => {
     res.render('add_meal', { title: 'add meal' });
 });
-router.get("/", (req, res) => {
-    res.render('index', { title: 'home page' });
-});
+// router.get("/", (req, res) => {
+//     res.render('index', { title: 'home page' });
+// });
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -60,6 +60,23 @@ router.post('/add-meal', upload.single('image'), async (req, res) => {
     } catch (error) {
         console.error('Error adding Meal:', error);
         res.status(500).send('Internal Server Error');
+    }
+});
+
+router.get('/', async (req, res) => {
+    try {
+        // Récupération des catégories et des repas associés depuis la base de données
+        const categoriesWithMeals = await prisma.category.findMany({
+            include: {
+                meals: true
+            }
+        });
+
+        // Rendu de la page HTML avec les données récupérées
+        res.render('index', { categoriesWithMeals });
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données :', error);
+        res.status(500).send('Erreur serveur');
     }
 });
 
