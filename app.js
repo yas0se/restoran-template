@@ -9,6 +9,10 @@ const prisma = new PrismaClient();
 
 const PORT = process.env.PORT || 3003;
 
+const log = require('./jjs/log');
+const logger = require('./jjs/log');
+
+
 //midlware
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -49,6 +53,6 @@ app.get('/uploads/:filename', (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(` server started at http://localhost:${PORT}`);
+    logger.info(` server started at http://localhost:${PORT}`);
 });
 

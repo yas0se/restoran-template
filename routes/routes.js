@@ -10,6 +10,7 @@ router.get("/add_employees", (req, res) => {
 router.get("/add_meal", (req, res) => {
     res.render('add_meal', { title: 'add meal' });
 });
+
 // router.get("/", (req, res) => {
 //     res.render('index', { title: 'home page' });
 // });
@@ -73,12 +74,28 @@ router.get('/', async (req, res) => {
         });
 
         // Rendu de la page HTML avec les données récupérées
-        res.render('index', { categoriesWithMeals });
+        // res.render('index', { categoriesWithMeals });
+
+        const chefs = await prisma.employees.findMany();
+        res.render('index', { categoriesWithMeals, chefs });
     } catch (error) {
         console.error('Erreur lors de la récupération des données :', error);
         res.status(500).send('Erreur serveur');
     }
 });
+router.get("/about", async (req, res) => {
+    try {
+        // Récupération des chefs
+        const chefs = await prisma.employees.findMany();
 
+        // Rendu de la page HTML avec les données récupérées
+        res.render('about', { title: 'About', chefs });
+    } catch (error) {
+        console.error('Erreur lors de la récupération des données :', error);
+        res.status(500).send('Erreur serveur');
+    }});
+router.get("/contact", (req, res) => {
+    res.render('contact', { title: 'Contact' });
+});
 
 module.exports = router;
