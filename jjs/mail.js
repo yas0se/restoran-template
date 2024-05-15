@@ -27,8 +27,8 @@ const newsletterController = {
       const mailOptions = {
         from: "apprenant3@talents4starups.com",
         to: newsletter.newsletter_email,
-        subject: "Sending Email using Node.js",
-        text: "That was easy!",
+        subject: "Découvrez les dernières nouveautés de notre restaurant !",
+        text: "mehna bik 3andna 🎂",
       }
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
