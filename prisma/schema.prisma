@@ -41,7 +41,7 @@ model employees{
 
 model newsletter {
   newsletter_id  Int      @id @default(autoincrement())
-  newsletter_email String   @unique
+  newsletter_email String   
 }
 
 model meal {

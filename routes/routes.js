@@ -3,6 +3,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const multer = require('multer');
+const newsletterController = require('../jjs/mail')
 
 router.get("/add_employees", (req, res) => {
     res.render('add_employees', { title: 'add employees' });
@@ -11,9 +12,7 @@ router.get("/add_meal", (req, res) => {
     res.render('add_meal', { title: 'add meal' });
 });
 
-// router.get("/", (req, res) => {
-//     res.render('index', { title: 'home page' });
-// });
+
 
 const upload = multer({ dest: 'uploads/' });
 
@@ -22,7 +21,6 @@ router.post('/add-employee', upload.single('image'), async (req, res) => {
         const { name, restaurant } = req.body;
         const image = req.file.filename; // Nom du fichier image téléchargé
 
-        // Enregistrer les données de l'employé dans la base de données
         const newEmployee = await prisma.employees.create({
             data: {
                 employee_name: name,
@@ -66,15 +64,12 @@ router.post('/add-meal', upload.single('image'), async (req, res) => {
 
 router.get('/', async (req, res) => {
     try {
-        // Récupération des catégories et des repas associés depuis la base de données
         const categoriesWithMeals = await prisma.category.findMany({
             include: {
                 meals: true
             }
         });
 
-        // Rendu de la page HTML avec les données récupérées
-        // res.render('index', { categoriesWithMeals });
 
         const chefs = await prisma.employees.findMany();
         res.render('index', { categoriesWithMeals, chefs });
@@ -85,10 +80,8 @@ router.get('/', async (req, res) => {
 });
 router.get("/about", async (req, res) => {
     try {
-        // Récupération des chefs
         const chefs = await prisma.employees.findMany();
 
-        // Rendu de la page HTML avec les données récupérées
         res.render('about', { title: 'About', chefs });
     } catch (error) {
         console.error('Erreur lors de la récupération des données :', error);
@@ -97,5 +90,29 @@ router.get("/about", async (req, res) => {
 router.get("/contact", (req, res) => {
     res.render('contact', { title: 'Contact' });
 });
+
+// router.post('/signup', (req, res) => {
+//     // Configurer les options de l'e-mail
+//     var mailOptions = {
+//         from: 'apprenant3@talents4startups.com',
+//         to: 'mestaouiyasser0@gmail.com', 
+//         subject: 'New Signup',
+//         text: 'A new user signed up!'
+//     };
+
+//     // Envoyer l'e-mail
+//     transporter.sendMail(mailOptions, function (error, info) {
+//         if (error) {
+//             console.log(error);
+//             res.status(500).send('Failed to send email');
+//         } else {
+//             console.log('Email sent: ' + info.response);
+//             res.send('Email sent successfully');
+//         }
+//     });
+// });
+
+router.post('/newsletters', newsletterController.create);
+
 
 module.exports = router;
