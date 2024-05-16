@@ -3,19 +3,29 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const session = require('express-session');
-
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
-
 const PORT = process.env.PORT || 3003;
+const logger = require('./controller/log');
 
-const log = require('./jjs/log');
-const logger = require('./jjs/log');
-
-
-//midlware
-app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.set("view engine","ejs");
+app.use(express.static('public'));
+
+const aboutRoute = require('./routes/about');
+const loadRoute = require('./routes/load');
+const addMealRoute = require('./routes/add_meal');
+const contactRoute = require('./routes/contact');
+const employeeRoute = require('./routes/add-employee');
+
+app.use('/about', aboutRoute);
+app.use('/', loadRoute);
+app.use('/add_meal', addMealRoute);
+app.use('/add_employees', employeeRoute);
+app.use('/contact', contactRoute);
+
+
 app.use(session({
     secret: 'my secret key',
     saveUninitialized: true,
@@ -27,23 +37,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// Middleware pour rendre les fichiers statiques dans le répertoire "public"
-app.use(express.static('public'));
 const path = require('path');
-
 app.use(express.static(path.join(__dirname, 'public')));
-
-
-//ejs
-app.set("view engine","ejs");
-
-//route prefix
 app.use("", require("./routes/routes"));
 app.get('/uploads/:filename', (req, res) => {
     const fileName = req.params.filename;
-    const filePath = path.join(__dirname, 'uploads', fileName); // Assuming uploads directory is in the root of your project
+    const filePath = path.join(__dirname, 'uploads', fileName); 
 
-    // Send the file
     res.sendFile(filePath, (err) => {
         if (err) {
             console.error('Error sending file:', err);
@@ -55,4 +55,3 @@ app.get('/uploads/:filename', (req, res) => {
 app.listen(PORT, () => {
     logger.info(` server started at http://localhost:${PORT}`);
 });
-

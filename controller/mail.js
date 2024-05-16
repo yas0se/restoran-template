@@ -16,19 +16,19 @@ const newsletterController = {
       console.log(newsletter.newsletter_email);
 
       const transporter = nodemailer.createTransport({
-        host: "smtp.zoho.com",
+        host:process.env.SMTP_host ,
         port: 465,
         secure: true, 
         auth: {
-          user: "apprenant3@talents4starups.com",
-          pass: "c2ddvc-A",
+          user: process.env.SMPT_user ,
+          pass: process.env.SMPT_pass ,
         },
       });
       const mailOptions = {
         from: "apprenant3@talents4starups.com",
         to: newsletter.newsletter_email,
         subject: "Découvrez les dernières nouveautés de notre restaurant !",
-        text: "mehna bik 3andna 🎂",
+        text: "merhba bik 3andna 🎂",
       }
       transporter.sendMail(mailOptions, function(error, info){
         if (error) {
@@ -38,13 +38,6 @@ const newsletterController = {
         }
         });
         
-
-    //   await transporter.sendMail({
-    //     from: "apprenant3@talents4starups.com",
-    //     to: newsletter.email,
-    //     subject: "Sending Email using Node.js",
-    //     text: "That was easy!",
-    //   });
 console.log("1");
 
       res.redirect('/');
