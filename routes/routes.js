@@ -3,7 +3,7 @@ const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const multer = require('multer');
-const newsletterController = require('../jjs/mail')
+const newsletterController = require('../controller/mail')
 
 router.get("/add_employees", (req, res) => {
     res.render('add_employees', { title: 'add employees' });
