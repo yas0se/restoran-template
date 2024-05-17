@@ -6,7 +6,7 @@ const session = require('express-session');
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const PORT = process.env.PORT || 3003;
-const logger = require('./controller/log');
+const logger = require('./logger/log');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
